@@ -4,12 +4,12 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"math"
 	"net/http"
 	"sort"
 	"strings"
 
 	"github.com/4okimi7uki/repo-spector/internal/models"
-	// "github.com/4okimi7uki/repo-spector/internal/models"
 )
 
 type Client struct {
@@ -106,14 +106,14 @@ func (c *Client) fetchRepos(first int, afterCursor *string) (*models.GraphQLResp
 func (c *Client) FetchAllRepo(excludeLang []string) (models.LangStatWithTotal, error) {
 	agg := map[string]*models.LangAgg{}
 	var after *string = nil
+	excludeSet := toExcludeSet(excludeLang)
 
 	for {
 		resp, err := c.fetchRepos(50, after)
 		if err != nil {
 			return models.LangStatWithTotal{}, err
 		}
-
-		c.AggregateLanguages(resp, agg, excludeLang)
+		c.AggregateLanguages(resp, agg, excludeSet)
 
 		pi := resp.Data.Viewer.Repositories.PageInfo
 		if !pi.HasNextPage || pi.EndCursor == "" {
@@ -126,7 +126,7 @@ func (c *Client) FetchAllRepo(excludeLang []string) (models.LangStatWithTotal, e
 	return BuildSortedAgg(agg), nil
 }
 
-func (c *Client) AggregateLanguages(resp *models.GraphQLResponse, agg map[string]*models.LangAgg, excludeLang []string) {
+func (c *Client) AggregateLanguages(resp *models.GraphQLResponse, agg map[string]*models.LangAgg, excludeLang map[string]struct{}) {
 	nodes := resp.Data.Viewer.Repositories.Nodes
 	for _, repo := range nodes {
 		for _, e := range repo.Languages.Edges {
@@ -140,7 +140,8 @@ func (c *Client) AggregateLanguages(resp *models.GraphQLResponse, agg map[string
 
 			a, ok := agg[name]
 			if !ok {
-				agg[name] = &models.LangAgg{Size: e.Size, Color: &e.Node.Color}
+				color := e.Node.Color
+				agg[name] = &models.LangAgg{Size: e.Size, Color: &color}
 				continue
 			}
 
@@ -170,7 +171,8 @@ func BuildSortedAgg(agg map[string]*models.LangAgg) models.LangStatWithTotal {
 
 	if total > 0 {
 		for i := range out {
-			out[i].Percent = float64(out[i].Size) / float64(total) * 100
+			raw := float64(out[i].Size) / float64(total) * 100
+			out[i].Percent = math.Round(raw*100) / 100
 		}
 	}
 
@@ -180,16 +182,19 @@ func BuildSortedAgg(agg map[string]*models.LangAgg) models.LangStatWithTotal {
 	}
 }
 
-func isExcludeLang(lang string, exclude []string) bool {
+func toExcludeSet(exclude []string) map[string]struct{} {
+	set := make(map[string]struct{}, len(exclude))
 	for _, ex := range exclude {
 		x := strings.TrimSpace(ex)
 		if x == "" {
 			continue
 		}
-
-		if lang == x {
-			return true
-		}
+		set[x] = struct{}{}
 	}
-	return false
+	return set
+}
+
+func isExcludeLang(lang string, exclude map[string]struct{}) bool {
+	_, ok := exclude[lang]
+	return ok
 }

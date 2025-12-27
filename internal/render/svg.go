@@ -1,0 +1,97 @@
+package render
+
+import (
+	"fmt"
+	"io"
+	"math"
+	"os"
+	"path/filepath"
+	"strings"
+
+	"github.com/4okimi7uki/repo-spector/internal/models"
+)
+
+func WriteSVG(path string, content string) error {
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+		return err
+	}
+	f, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+
+	defer func() { _ = f.Close() }()
+	_, err = io.WriteString(f, content)
+	return err
+}
+
+func BuildSVG(stat models.LangStatWithTotal) string {
+	const (
+		width  = 430
+		height = 304
+	)
+	var (
+		langItems = stat.Items
+		// Total     = stat.Total
+	)
+
+	var b strings.Builder
+
+	topLang := langItems[0]
+
+	fmt.Fprintf(&b, `<svg version="1.1" width="%d" height="%d" xmlns="http://www.w3.org/2000/svg">`+"\n",
+		width, height,
+	)
+	fmt.Fprint(&b, `  <linearGradient id="gradient" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0%" stop-color="#fff" stop-opacity="0.15" />
+      <stop offset="100%" stop-color="#fff" />˝
+</linearGradient>`+"\n\n",
+	)
+
+	//style
+	fmt.Fprint(&b, `  <style>`+"\n")
+	fmt.Fprint(&b, `  .top {animation: fadeIn 1.2s ease-in forwards; opacity: 0;}`+"\n")
+	fmt.Fprint(&b, `  .bar {animation: slideIn 1.3s 0.6s cubic-bezier(0.47, 0, 0.745, 0.715) forwards; opacity: 0;}`+"\n")
+	fmt.Fprint(&b, `  .langRow {opacity: 0; animation: fadeIn 1s ease-in forwards;}`+"\n\n")
+	fmt.Fprint(&b, `  @keyframes fadeIn { from { opacity: 0;} to { opacity: 1;} }`+"\n")
+	fmt.Fprint(&b, `  @keyframes slideIn { from { width: 0; opacity: 1 } to { width: var(--w); opacity: 1}}`+"\n")
+	fmt.Fprint(&b, `  </style>`+"\n")
+
+	// border
+	fmt.Fprintf(&b, `  <rect id="border" x="0.5" y="0.5" width="%d" height="%d" fill="#3D444D" rx="5" ry="5" />`+"\n"+` <rect x="0.5" y="0.5" width="429" height="303" rx="4.5" ry="4.5" stroke="#3D444D"/>`+"\n",
+		width-2, height-2)
+
+	// title
+	b.WriteString(`  <text id="title" x="33" y="40" font-size="14" font-weight="bold" fill="#fff" font-family="system-ui, -apple-system, sans-serif">Most Used Languages</text>` + "\n")
+
+	// Top lang
+	fmt.Fprintf(&b, `  <text id="topLang" class="top" x="123" y="80" font-size="34" dominant-baseline="middle" text-anchor="middle" font-weight="bold" fill='#fff' font-family="system-ui, -apple-system, sans-serif">%s</text>`+"\n", topLang.Name)
+
+	// Top Percent
+	fmt.Fprintf(&b, `  <text id="topPercent" class="top" x="330" y="70" font-size="28" font-weight="bold" fill='#fff' font-family="system-ui, -apple-system, sans-serif" dominant-baseline="middle" text-anchor="middle" >%.2f%%</text>`+"\n", topLang.Percent)
+	// Top bytes
+	fmt.Fprintf(&b, `  <text id="topByte" class="top" x="330" y="95" font-size="16" font-weight="normal" fill='#fff' font-family="system-ui, -apple-system, sans-serif" dominant-baseline="middle" text-anchor="middle" >%d bytes</text>`+"\n", topLang.Size)
+
+	b.WriteString("\n" + ` <path d="M15 116.8H415" stroke="#fff"/>` + "\n\n")
+
+	const langRowTemplate = `<g transform="translate(0, %[1]d)" class="langRow">
+  <text id="lang-name" x="33" y="150" font-size="16" font-weight="bold" fill="#fff" font-family="system-ui, -apple-system, sans-serif">%[2]s  <tspan font-size="13" fill="#B6B6B6" font-weight="normal">%.2f%%</tspan></text>
+  <rect class="bar" style="--w: %[4]fpx" x="195" y="140" width="%[4]f" height="12" fill="url(#gradient)" />
+</g>
+`
+	secondLang := langItems[1]
+	for i, item := range langItems[1:6] {
+		rowOffsetY := 30 * i
+
+		const nameXBase = 33
+		const nameCharWith = 6
+		const percentGap = 26
+		const maxRectWidth = 200
+		var rectWidth = math.Round(maxRectWidth * float64(item.Size) / float64(secondLang.Size))
+
+		fmt.Fprintf(&b, langRowTemplate+"\n", rowOffsetY, item.Name, item.Percent, rectWidth)
+	}
+
+	b.WriteString(`</svg>`)
+	return b.String()
+}
