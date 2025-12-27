@@ -48,11 +48,29 @@ func BuildSVG(stat models.LangStatWithTotal) string {
 </linearGradient>`+"\n\n",
 	)
 
+	fmt.Fprint(&b, `  <defs>
+  <linearGradient id="animeGrad" x1="0" y1="0" x2="1" y2="0"
+                  gradientUnits="objectBoundingBox">
+    <stop offset="0%" stop-color="#ffffff" stop-opacity="1" />
+    <stop offset="50%" stop-color="#ffffff" stop-opacity="0.3" />
+    <stop offset="100%" stop-color="#ffffff" stop-opacity="1" />
+    <animateTransform
+      attributeName="gradientTransform"
+      type="translate"
+      from="-1 0"
+      to="1 0"
+      dur="3s"
+      repeatCount="indefinite"
+    />
+  </linearGradient>
+</defs>`+"\n\n",
+	)
+
 	//style
 	fmt.Fprint(&b, `  <style>`+"\n")
-	fmt.Fprint(&b, `  .top {animation: fadeIn 1.2s ease-in forwards; opacity: 0;}`+"\n")
-	fmt.Fprint(&b, `  .bar {animation: slideIn 1.3s 0.6s cubic-bezier(0.47, 0, 0.745, 0.715) forwards; opacity: 0;}`+"\n")
-	fmt.Fprint(&b, `  .langRow {opacity: 0; animation: fadeIn 1s ease-in forwards;}`+"\n\n")
+	fmt.Fprint(&b, `  .top {animation: fadeIn 1.2s ease-in forwards;}`+"\n")
+	fmt.Fprint(&b, `  .bar {animation: slideIn 1.3s 0.6s cubic-bezier(0.47, 0, 0.745, 0.715) forwards; width: 0}`+"\n")
+	fmt.Fprint(&b, `  .langRow {animation: fadeIn 1s ease-in forwards;}`+"\n\n")
 	fmt.Fprint(&b, `  @keyframes fadeIn { from { opacity: 0;} to { opacity: 1;} }`+"\n")
 	fmt.Fprint(&b, `  @keyframes slideIn { from { width: 0; opacity: 1 } to { width: var(--w); opacity: 1}}`+"\n")
 	fmt.Fprint(&b, `  </style>`+"\n")
@@ -72,7 +90,8 @@ func BuildSVG(stat models.LangStatWithTotal) string {
 	// Top bytes
 	fmt.Fprintf(&b, `  <text id="topByte" class="top" x="330" y="95" font-size="16" font-weight="normal" fill='#fff' font-family="system-ui, -apple-system, sans-serif" dominant-baseline="middle" text-anchor="middle" >%d bytes</text>`+"\n", topLang.Size)
 
-	b.WriteString("\n" + ` <path d="M15 116.8H415" stroke="#fff"/>` + "\n\n")
+	// line
+	b.WriteString("\n" + `  <rect x="14" y="115.8" width="400" height="1" fill="url(#animeGrad)" />` + "\n\n")
 
 	const langRowTemplate = `<g transform="translate(0, %[1]d)" class="langRow">
   <text id="lang-name" x="33" y="150" font-size="16" font-weight="bold" fill="#fff" font-family="system-ui, -apple-system, sans-serif">%[2]s  <tspan font-size="13" fill="#B6B6B6" font-weight="normal">%.2f%%</tspan></text>
