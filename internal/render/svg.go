@@ -106,9 +106,6 @@ func BuildSVG(stat models.LangStatWithTotal) string {
 
 		rowOffsetY := 30 * i
 
-		const nameXBase = 33
-		const nameCharWith = 6
-		const percentGap = 26
 		const maxRectWidth = 200
 		var rectWidth = math.Round(maxRectWidth * float64(item.Size) / float64(secondLang.Size))
 
