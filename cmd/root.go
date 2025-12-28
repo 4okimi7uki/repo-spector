@@ -29,7 +29,7 @@ var rootCmd = &cobra.Command{
 		fmt.Println(agg)
 		bar := strings.Repeat("─", 20+len(excludeLang)*8)
 		_, _ = fmt.Fprintln(os.Stdout, bar)
-		fmt.Fprintf(os.Stdout, " Exclude Languages: %s\n", excludeLang)
+		_, _ = fmt.Fprintf(os.Stdout, " Exclude Languages: %s\n", excludeLang)
 		_, _ = fmt.Fprintln(os.Stdout, bar)
 
 		content := render.BuildSVG(agg)
