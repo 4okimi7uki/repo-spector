@@ -79,11 +79,11 @@ func BuildSVG(stat models.LangStatWithTotal) string {
 	fmt.Fprintf(&b, `  <rect id="border" x="0.5" y="0.5" width="%d" height="%d" fill="#3D444D" rx="5" ry="5" />`+"\n"+` <rect x="0.5" y="0.5" width="429" height="303" rx="4.5" ry="4.5" stroke="#3D444D"/>`+"\n",
 		width-2, height-2)
 
-	// title
+	// head text
 	b.WriteString(`  <text id="title" x="33" y="40" font-size="14" font-weight="bold" fill="#fff" font-family="system-ui, -apple-system, sans-serif">Most Used Languages</text>` + "\n")
 
 	// Top lang
-	fmt.Fprintf(&b, `  <text id="topLang" class="top" x="123" y="80" font-size="34" dominant-baseline="middle" text-anchor="middle" font-weight="bold" fill='#fff' font-family="system-ui, -apple-system, sans-serif">%s</text>`+"\n", topLang.Name)
+	fmt.Fprintf(&b, `  <text id="topLang" class="top" x="135" y="80" font-size="38" dominant-baseline="middle" text-anchor="middle" font-weight="bold" fill='#fff' font-family="system-ui, -apple-system, sans-serif">%s</text>`+"\n", topLang.Name)
 
 	// Top Percent
 	fmt.Fprintf(&b, `  <text id="topPercent" class="top" x="330" y="70" font-size="28" font-weight="bold" fill='#fff' font-family="system-ui, -apple-system, sans-serif" dominant-baseline="middle" text-anchor="middle" >%.2f%%</text>`+"\n", topLang.Percent)
@@ -99,7 +99,11 @@ func BuildSVG(stat models.LangStatWithTotal) string {
 </g>
 `
 	secondLang := langItems[1]
-	for i, item := range langItems[1:6] {
+	for i, item := range langItems[1:] {
+		if i == 5 {
+			break
+		}
+
 		rowOffsetY := 30 * i
 
 		const nameXBase = 33
