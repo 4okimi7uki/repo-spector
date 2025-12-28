@@ -185,7 +185,7 @@ func BuildSortedAgg(agg map[string]*models.LangAgg) models.LangStatWithTotal {
 func toExcludeSet(exclude []string) map[string]struct{} {
 	set := make(map[string]struct{}, len(exclude))
 	for _, ex := range exclude {
-		x := strings.TrimSpace(ex)
+		x := strings.ToLower(strings.TrimSpace(ex))
 		if x == "" {
 			continue
 		}
@@ -195,6 +195,6 @@ func toExcludeSet(exclude []string) map[string]struct{} {
 }
 
 func isExcludeLang(lang string, exclude map[string]struct{}) bool {
-	_, ok := exclude[lang]
+	_, ok := exclude[strings.ToLower(lang)]
 	return ok
 }
