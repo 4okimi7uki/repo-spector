@@ -1,0 +1,48 @@
+package cmd
+
+import (
+	"fmt"
+	"os"
+	"strings"
+
+	"github.com/4okimi7uki/repo-spector/internal/client"
+	"github.com/4okimi7uki/repo-spector/internal/render"
+	"github.com/joho/godotenv"
+	"github.com/spf13/cobra"
+)
+
+var rootCmd = &cobra.Command{
+	Use:   "repo-spector",
+	Short: "Generate language stats SVG for your repositories",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		_ = godotenv.Load()
+		v := strings.TrimSpace(os.Getenv("GH_TOKEN"))
+
+		excludeLang := []string{"HTML", "CSS", "Makefile", "MDX", "TypeScript"}
+
+		c := client.NewClient(v)
+
+		agg, err := c.FetchAllRepo(excludeLang)
+		if err != nil {
+			return err
+		}
+		fmt.Println(agg)
+		bar := strings.Repeat("─", 20+len(excludeLang)*8)
+		_, _ = fmt.Fprintln(os.Stdout, bar)
+		fmt.Fprintf(os.Stdout, " Exclude Languages: %s\n", excludeLang)
+		_, _ = fmt.Fprintln(os.Stdout, bar)
+
+		content := render.BuildSVG(agg)
+		if err = render.WriteSVG("./output/top6_lang.svg", content); err != nil {
+			return err
+		}
+
+		return nil
+	},
+}
+
+func Excute() {
+	if err := rootCmd.Execute(); err != nil {
+		os.Exit(1)
+	}
+}
