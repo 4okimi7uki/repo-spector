@@ -1,4 +1,6 @@
 # repo-spector
+**self-reposcope**, a.k.a. **repo-spector**
+
 
 ![image](./output/top6_lang.svg)
 
