@@ -4,15 +4,20 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/4okimi7uki/repo-spector/internal/client"
 	"github.com/4okimi7uki/repo-spector/internal/render"
+	"github.com/4okimi7uki/repo-spector/internal/ui"
 	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
 )
 
-var version = "v0.0.0-dev"
-var showVersion bool
+var (
+	version     = "v0.0.0-dev"
+	showVersion bool
+	excludeLang string
+)
 
 const (
 	dirPath  = "./output"
@@ -27,28 +32,37 @@ var rootCmd = &cobra.Command{
 			fmt.Printf("repo-spector %s\n", version)
 			return nil
 		}
+		start := time.Now()
 
 		_ = godotenv.Load()
 		v := strings.TrimSpace(os.Getenv("GH_TOKEN"))
 
-		excludeLang := []string{"HTML", "CSS", "Makefile", "MDX", "TypeScript"}
+		// excludeLang := []string{"HTML", "CSS", "Makefile", "MDX", "TypeScript"}
+		err := WithSpinner("　Generating SVG...", func(update func(string)) error {
+			resolvedExcludeLang := strings.Split(excludeLang, ",")
 
-		c := client.NewClient(v)
+			c := client.NewClient(v)
 
-		agg, err := c.FetchAllRepo(excludeLang)
+			agg, err := c.FetchAllRepo(resolvedExcludeLang)
+			if err != nil {
+				return err
+			}
+
+			if err = ui.PrintSummary(agg, resolvedExcludeLang); err != nil {
+				return err
+			}
+
+			content := render.BuildSVG(agg)
+			if err = render.WriteSVG(dirPath+"/"+fileName, content); err != nil {
+				return err
+			}
+			return nil
+		})
 		if err != nil {
 			return err
 		}
-		fmt.Println(agg)
-		bar := strings.Repeat("─", 20+len(excludeLang)*8)
-		_, _ = fmt.Fprintln(os.Stdout, bar)
-		_, _ = fmt.Fprintf(os.Stdout, " Exclude Languages: %s\n", excludeLang)
-		_, _ = fmt.Fprintln(os.Stdout, bar)
-
-		content := render.BuildSVG(agg)
-		if err = render.WriteSVG(dirPath+"."+fileName, content); err != nil {
-			return err
-		}
+		elapsed := time.Since(start)
+		fmt.Printf("Done in %.1fs 📈✨\n\n", elapsed.Seconds())
 
 		return nil
 	},
@@ -62,4 +76,5 @@ func Excute() {
 
 func init() {
 	rootCmd.Flags().BoolVarP(&showVersion, "version", "v", false, "Print version information")
+	rootCmd.PersistentFlags().StringVarP(&excludeLang, "exclude-lang", "x", "", "Exclude languages (e.g. -x 'html,shell')")
 }
