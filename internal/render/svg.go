@@ -44,7 +44,7 @@ func BuildSVG(aggregate models.LangStatWithTotal) string {
 	)
 	fmt.Fprint(&b, `  <linearGradient id="gradient" x1="0" x2="1" y1="0" y2="0">
       <stop offset="0%" stop-color="#fff" stop-opacity="0.15" />
-      <stop offset="100%" stop-color="#fff" />˝
+      <stop offset="100%" stop-color="#fff" />
 </linearGradient>`+"\n\n",
 	)
 
@@ -68,7 +68,7 @@ func BuildSVG(aggregate models.LangStatWithTotal) string {
 
 	//style
 	fmt.Fprint(&b, `  <style>`+"\n")
-	fmt.Fprint(&b, `  .top {animation: fadeIn 1.2s ease-in forwards;}`+"\n")
+	fmt.Fprintf(&b, `  .top {animation: fadeIn 1.2s ease-in forwards; filter: drop-shadow(0 0 5px %s);}`+"\n", *topLang.Color)
 	fmt.Fprint(&b, `  .bar {animation: slideIn 1.3s 0.6s cubic-bezier(0.47, 0, 0.745, 0.715) forwards; width: 0}`+"\n")
 	fmt.Fprint(&b, `  .langRow {animation: fadeIn 1s ease-in forwards;}`+"\n\n")
 	fmt.Fprint(&b, `  @keyframes fadeIn { from { opacity: 0;} to { opacity: 1;} }`+"\n")
