@@ -25,14 +25,14 @@ func WriteSVG(path string, content string) error {
 	return err
 }
 
-func BuildSVG(stat models.LangStatWithTotal) string {
+func BuildSVG(aggregate models.LangStatWithTotal) string {
 	const (
 		width  = 430
 		height = 304
 	)
 	var (
-		langItems = stat.Items
-		// Total     = stat.Total
+		langItems = aggregate.Items
+		// Total     = aggregate.Total
 	)
 
 	var b strings.Builder
