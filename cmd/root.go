@@ -34,13 +34,10 @@ var rootCmd = &cobra.Command{
 		}
 		start := time.Now()
 
-		err := godotenv.Load()
-		if err != nil {
-			return err
-		}
+		_ = godotenv.Load()
 		v := strings.TrimSpace(os.Getenv("GH_TOKEN"))
 
-		err = WithSpinner("　Generating SVG...", func(update func(string)) error {
+		err := WithSpinner("　Generating SVG...", func(update func(string)) error {
 			resolvedExcludeLang := strings.Split(excludeLang, ",")
 
 			c := client.NewClient(v)
