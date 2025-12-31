@@ -1,4 +1,4 @@
-name: Update Language Stats by repo-spector
+name: repo-spector
 
 on:
   schedule:
@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - name: Checkout target repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Download repo-spector binary from GitHub Release
         shell: bash
@@ -24,7 +24,7 @@ jobs:
       - name: Run repo-spector CLI
         shell: bash
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.SCOPE_TOKEN }}
         run: |
           mkdir -p output
           ./repo-spector -x "${{ secrets.EXCLUDED_LANGUAGES }}"
@@ -32,7 +32,7 @@ jobs:
       - name: Commit and Push updated SVGs
         shell: bash
         env:
-          GH_PAT: ${{ secrets.REPOSCOPE_TOKEN }}
+          GH_PAT: ${{ secrets.SCOPE_TOKEN }}
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
