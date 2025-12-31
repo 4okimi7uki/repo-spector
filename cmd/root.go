@@ -34,11 +34,13 @@ var rootCmd = &cobra.Command{
 		}
 		start := time.Now()
 
-		_ = godotenv.Load()
+		err := godotenv.Load()
+		if err != nil {
+			return err
+		}
 		v := strings.TrimSpace(os.Getenv("GH_TOKEN"))
 
-		// excludeLang := []string{"HTML", "CSS", "Makefile", "MDX", "TypeScript"}
-		err := WithSpinner("　Generating SVG...", func(update func(string)) error {
+		err = WithSpinner("　Generating SVG...", func(update func(string)) error {
 			resolvedExcludeLang := strings.Split(excludeLang, ",")
 
 			c := client.NewClient(v)
@@ -52,7 +54,10 @@ var rootCmd = &cobra.Command{
 				return err
 			}
 
-			content := render.BuildSVG(agg)
+			content, err := render.BuildSVG(agg)
+			if err != nil {
+				return err
+			}
 			if err = render.WriteSVG(dirPath+"/"+fileName, content); err != nil {
 				return err
 			}
