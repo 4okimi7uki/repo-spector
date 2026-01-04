@@ -7,7 +7,7 @@
 
 </div>
 
-**repo-spector** (a.k.a. [**self-reposcope**](https://github.com/4okimi7uki/self-reposcope)) is a reimagined Go-based　implementation of the original Rust-based self-reposcope, featuring a renewed design and a migration from the GitHub REST API to GitHub GraphQL.
+**repo-spector** (a.k.a. [**self-reposcope**](https://github.com/4okimi7uki/self-reposcope)) is a reimagined Go-based implementation of the original Rust-based self-reposcope, featuring a renewed design and a migration from the GitHub REST API to GitHub GraphQL.
 
 <!--関連する語根 -spect を含む単語
 また、「spector」という形ではありませんが、同じ語源を持つ一般的な単語には以下のようなものがあります。
