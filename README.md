@@ -17,7 +17,7 @@
 
 ## Requirements
 
-- Go 1.22 or later (recommended)
+- Go 1.25 or later (recommended)
 - GitHub Personal Access Token (set as `GH_TOKEN`)
   - The accessible repositories are determined by the token's scopes
 
