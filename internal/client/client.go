@@ -4,11 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"math"
 	"net/http"
-	"sort"
-	"strings"
 
+	"github.com/4okimi7uki/repo-spector/internal/aggregate"
 	"github.com/4okimi7uki/repo-spector/internal/models"
 )
 
@@ -106,14 +104,14 @@ func (c *Client) fetchRepos(first int, afterCursor *string) (*models.GraphQLResp
 func (c *Client) FetchAllRepo(excludeLang []string) (models.LangStatWithTotal, error) {
 	agg := map[string]*models.LangAgg{}
 	var after *string = nil
-	excludeSet := toExcludeSet(excludeLang)
+	excludeSet := aggregate.ToExcludeSet(excludeLang)
 
 	for {
 		resp, err := c.fetchRepos(50, after)
 		if err != nil {
 			return models.LangStatWithTotal{}, err
 		}
-		c.AggregateLanguages(resp, agg, excludeSet)
+		aggregate.AggregateLanguages(resp, agg, excludeSet)
 
 		pi := resp.Data.Viewer.Repositories.PageInfo
 		if !pi.HasNextPage || pi.EndCursor == "" {
@@ -123,78 +121,5 @@ func (c *Client) FetchAllRepo(excludeLang []string) (models.LangStatWithTotal, e
 		after = &pi.EndCursor
 	}
 
-	return BuildSortedAgg(agg), nil
-}
-
-func (c *Client) AggregateLanguages(resp *models.GraphQLResponse, agg map[string]*models.LangAgg, excludeLang map[string]struct{}) {
-	nodes := resp.Data.Viewer.Repositories.Nodes
-	for _, repo := range nodes {
-		for _, e := range repo.Languages.Edges {
-			name := e.Node.Name
-			if name == "" {
-				continue
-			}
-			if isExcludeLang(name, excludeLang) {
-				continue
-			}
-
-			a, ok := agg[name]
-			if !ok {
-				color := e.Node.Color
-				agg[name] = &models.LangAgg{Size: e.Size, Color: &color}
-				continue
-			}
-
-			a.Size += e.Size
-			if a.Color == nil && e.Node.Color != "" {
-				a.Color = &e.Node.Color
-			}
-		}
-	}
-}
-
-func BuildSortedAgg(agg map[string]*models.LangAgg) models.LangStatWithTotal {
-	out := []models.LangStat{}
-	var total = 0
-	for name, a := range agg {
-		out = append(out, models.LangStat{
-			Name:  name,
-			Size:  a.Size,
-			Color: a.Color,
-		})
-		total += a.Size
-	}
-
-	sort.Slice(out, func(i, j int) bool {
-		return out[i].Size > out[j].Size
-	})
-
-	if total > 0 {
-		for i := range out {
-			raw := float64(out[i].Size) / float64(total) * 100
-			out[i].Percent = math.Round(raw*100) / 100
-		}
-	}
-
-	return models.LangStatWithTotal{
-		Items: out,
-		Total: total,
-	}
-}
-
-func toExcludeSet(exclude []string) map[string]struct{} {
-	set := make(map[string]struct{}, len(exclude))
-	for _, ex := range exclude {
-		x := strings.ToLower(strings.TrimSpace(ex))
-		if x == "" {
-			continue
-		}
-		set[x] = struct{}{}
-	}
-	return set
-}
-
-func isExcludeLang(lang string, exclude map[string]struct{}) bool {
-	_, ok := exclude[strings.ToLower(lang)]
-	return ok
+	return aggregate.BuildSortedAgg(agg), nil
 }
