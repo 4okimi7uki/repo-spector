@@ -21,6 +21,12 @@
 - GitHub Personal Access Token (set as `GH_TOKEN`)
   - The accessible repositories are determined by the token's scopes
 
+## Usage
+
+### GitHub Actions
+
+### CLI
+
 <!--関連する語根 -spect を含む単語
 また、「spector」という形ではありませんが、同じ語源を持つ一般的な単語には以下のようなものがあります。
 inspect (インスペクト): 調査する、検査する (in- + spect = 中を見る)
