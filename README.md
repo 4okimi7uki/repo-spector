@@ -25,7 +25,90 @@
 
 ### GitHub Actions
 
+To enable automatic updates, follow these two steps:
+
+1. Set up a `GitHub Personal Access Token`
+
+Go to _Settings > Secrets and variables > Actions > [Repository secrets]_,
+then add a new secret with:
+
+- **Name**: `GH_TOKEN`
+- **Value**: Your GitHub Personal Access Token  
+  (with `repo` and `workflow` scopes)
+
+2. Add the following workflow file to `.github/workflows/repo-spector.yml`.
+
+```yml:repo-spector.yml
+name: repo-spector
+
+on:
+  schedule:
+    - cron: "0 0 * * 1" # Every Monday (UTC)
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+
+      - name: Download repo-spector binary from GitHub Release
+        shell: bash
+        run: |
+          curl -L https://github.com/4okimi7uki/repo-spector/releases/latest/download/repo-spector -o repo-spector
+          chmod +x ./repo-spector
+
+      - name: Run repo-spector CLI
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          mkdir -p output
+          ./repo-spector -x "${{ secrets.EXCLUDED_LANGUAGES }}"
+
+      - name: Commit and Push updated SVGs
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add output/*.svg
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "update: language stats svg"
+            git push https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }} HEAD:main
+          fi
+
+```
+
 ### CLI
+
+TBD
+
+## Options
+
+### Exclude language
+
+You can exclude specific languages either by using the `-x, --excluded-languages` CLI option or the secret: `EXCLUDED_LANGUAGES`.
+
+For example, to exclude `HTML`, `CSS` and `dockerfile`:
+
+**`secret`**
+
+- **Name**: `EXCLUDED_LANGUAGES`
+- **Value**: `html,css,dockerfile`
+
+**`CLI`**
+
+```sh
+./repo-scope -x 'html,css,dockerfile'
+```
 
 <!--関連する語根 -spect を含む単語
 また、「spector」という形ではありませんが、同じ語源を持つ一般的な単語には以下のようなものがあります。
@@ -36,3 +119,7 @@ suspect (サスペクト): 疑う、怪しいと思う (sus- + spect = 下から
 perspective (パースペクティブ): 視点、見方、遠近法 (per- + spect = 通して見る)
 aspect (アスペクト): 側面、様相 (a- + spect = の方を見る)
 これらの単語は、いずれも「見る」という中心的な意味に関連しています。-->
+
+---
+
+<small>2026 Aoki Mizuki – Developed with 🍭 and a sense of fun.</small>
