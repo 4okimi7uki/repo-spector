@@ -1,0 +1,57 @@
+name: 📝 General Issue
+description: Bug report, feature request, or question. Japanese OK.
+title: "[Issue]: "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for opening an issue 🙌
+        Please fill in what applies to your case.
+
+  - type: dropdown
+    id: issue-type
+    attributes:
+      label: Issue type
+      options:
+        - Bug
+        - Feature
+        - Question
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Briefly describe the issue.
+      placeholder: What is this issue about?
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: Additional context, logs, screenshots, ideas, etc.
+      placeholder: |
+        - What happened?
+        - What did you expect?
+        - Any error messages?
+    validations:
+      required: false
+
+  - type: input
+    id: version
+    attributes:
+      label: Version (if applicable)
+      placeholder: e.g. v0.3.1
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment (optional)
+      placeholder: |
+        OS:
+        Command:
