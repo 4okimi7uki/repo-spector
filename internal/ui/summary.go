@@ -14,8 +14,8 @@ func PrintSummary(aggregate models.LangStatWithTotal, excludeLang []string) erro
 		langItems = aggregate.Items
 		Total     = aggregate.Total
 	)
-	loc, _ := time.LoadLocation("Asia/Tokyo")
-	now := time.Now().In(loc).Format("2006-01-02 15:04 MST")
+
+	now := time.Now().Local().Format("2006-01-02 15:04 MST")
 
 	bar := strings.Repeat("─", 50)
 	_, _ = fmt.Println()
