@@ -65,3 +65,22 @@ type LangStat struct {
 	Color   *string
 	Percent float64
 }
+
+type SvgConfig struct {
+	Width  int
+	Height int
+
+	TitleX int
+	TitleY int
+
+	TopLangX int
+	TopLangY int
+
+	TopPercentX int
+	TopPercentY int
+
+	RowStartY int
+	RowGap    int
+
+	MaxBarWidth float64
+}
