@@ -42,7 +42,7 @@ var rootCmd = &cobra.Command{
 
 			c := client.NewClient(v)
 
-			agg, err := c.FetchAllRepo(resolvedExcludeLang)
+			agg, repo, err := c.FetchAllRepo(resolvedExcludeLang)
 			if err != nil {
 				return err
 			}
@@ -51,7 +51,7 @@ var rootCmd = &cobra.Command{
 				return err
 			}
 
-			content, err := render.BuildSVG(agg)
+			content, err := render.BuildSVG(agg, repo)
 			if err != nil {
 				return err
 			}

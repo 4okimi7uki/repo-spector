@@ -15,6 +15,7 @@ type Data struct {
 
 type Viewer struct {
 	Repositories Repositories `json:"repositories"`
+	Login        string       `json:"login"`
 }
 
 type Repositories struct {
@@ -59,9 +60,35 @@ type LangStatWithTotal struct {
 	Total int
 }
 
+type RepositoryCountAndAuthor struct {
+	Count  int
+	Author string
+}
+
 type LangStat struct {
 	Name    string
 	Size    int
 	Color   *string
 	Percent float64
+}
+
+type SvgConfig struct {
+	Width  int
+	Height int
+
+	TitleX int
+	TitleY int
+
+	TopLangX int
+	TopLangY int
+
+	TopPercentX int
+	TopPercentY int
+
+	RowStartY int
+	RowGap    int
+
+	OverviewShiftY int
+
+	MaxBarWidth float64
 }

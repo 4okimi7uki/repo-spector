@@ -7,9 +7,10 @@ import (
 	"github.com/4okimi7uki/repo-spector/internal/models"
 )
 
-func AggregateLanguages(resp *models.GraphQLResponse, agg map[string]*models.LangAgg, excludeLang map[string]struct{}) {
+func AggregateLanguages(resp *models.GraphQLResponse, agg map[string]*models.LangAgg, excludeLang map[string]struct{}, repoCount *int) {
 	nodes := resp.Data.Viewer.Repositories.Nodes
 	for _, repo := range nodes {
+		*repoCount++
 		for _, e := range repo.Languages.Edges {
 			name := e.Node.Name
 			if name == "" {
