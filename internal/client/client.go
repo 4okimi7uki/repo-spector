@@ -64,6 +64,7 @@ func (c *Client) fetchRepos(first int, afterCursor *string) (*models.GraphQLResp
 	const query = `
 	query($first: Int!, $after: String) {
   viewer {
+    login
     repositories(
       first: $first
       after: $after
@@ -101,17 +102,25 @@ func (c *Client) fetchRepos(first int, afterCursor *string) (*models.GraphQLResp
 	return &result, nil
 }
 
-func (c *Client) FetchAllRepo(excludeLang []string) (models.LangStatWithTotal, error) {
+func (c *Client) FetchAllRepo(excludeLang []string) (models.LangStatWithTotal, models.RepositoryCountAndAuthor, error) {
 	agg := map[string]*models.LangAgg{}
 	var after *string = nil
 	excludeSet := aggregate.ToExcludeSet(excludeLang)
+	repo := models.RepositoryCountAndAuthor{
+		Count:  0,
+		Author: "",
+	}
 
 	for {
 		resp, err := c.fetchRepos(50, after)
 		if err != nil {
-			return models.LangStatWithTotal{}, err
+			return models.LangStatWithTotal{}, repo, err
 		}
-		aggregate.AggregateLanguages(resp, agg, excludeSet)
+		aggregate.AggregateLanguages(resp, agg, excludeSet, &repo.Count)
+
+		if repo.Author == "" {
+			repo.Author = resp.Data.Viewer.Login
+		}
 
 		pi := resp.Data.Viewer.Repositories.PageInfo
 		if !pi.HasNextPage || pi.EndCursor == "" {
@@ -121,5 +130,5 @@ func (c *Client) FetchAllRepo(excludeLang []string) (models.LangStatWithTotal, e
 		after = &pi.EndCursor
 	}
 
-	return aggregate.BuildSortedAgg(agg), nil
+	return aggregate.BuildSortedAgg(agg), repo, nil
 }
