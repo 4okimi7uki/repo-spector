@@ -21,10 +21,11 @@ var (
 	excludeLang string
 )
 
-// const (
-// 	dirPath  = "./output"
-// 	fileName = "top6_lang.svg"
-// )
+const (
+	dirPath = "./output"
+	// fileName = "top6_lang.svg"
+	fileName = "classic_theme.svg"
+)
 
 var rootCmd = &cobra.Command{
 	Use:   "repo-spector",
@@ -56,11 +57,7 @@ var rootCmd = &cobra.Command{
 			}
 
 			update("Build SVG...")
-			if err = ui.PrintSummary(agg, resolvedExcludeLang); err != nil {
-				return err
-			}
-
-			if err = render.RenderSVG(agg, repo); err != nil {
+			if err = render.RenderSVG(style, agg, repo, dirPath+"/"+fileName); err != nil {
 				return err
 			}
 

@@ -2,10 +2,27 @@ package original
 
 import (
 	"fmt"
+	"io"
+	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/4okimi7uki/repo-spector/internal/models"
 )
+
+func WriteSVG(path string, content string) error {
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+		return err
+	}
+	f, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+
+	defer func() { _ = f.Close() }()
+	_, err = io.WriteString(f, content)
+	return err
+}
 
 func defaultSVGConfig() models.SvgConfig {
 	return models.SvgConfig{

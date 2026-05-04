@@ -70,6 +70,7 @@ func (c *Client) fetchRepos(first int, afterCursor *string) (*models.GraphQLResp
 	query($first: Int!, $after: String) {
   viewer {
     login
+    avatarUrl
     repositories(
       first: $first
       after: $after
@@ -125,6 +126,7 @@ func (c *Client) FetchAllRepo(excludeLang []string) (models.LangStatWithTotal, m
 
 		if repo.Author == "" {
 			repo.Author = resp.Data.Viewer.Login
+			repo.AvatarUrl = resp.Data.Viewer.AvatarUrl
 		}
 
 		pi := resp.Data.Viewer.Repositories.PageInfo

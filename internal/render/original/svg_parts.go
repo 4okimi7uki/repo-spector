@@ -8,14 +8,8 @@ import (
 	"time"
 
 	"github.com/4okimi7uki/repo-spector/internal/models"
+	"github.com/4okimi7uki/repo-spector/internal/render/color"
 )
-
-func safeColor(p *string, fallback string) string {
-	if p == nil || *p == "" {
-		return fallback
-	}
-	return *p
-}
 
 func renderStyles(b *strings.Builder, topLang models.LangStat) {
 	fmt.Fprint(b, `  <linearGradient id="gradient" x1="0" x2="1" y1="0" y2="0">
@@ -41,7 +35,7 @@ func renderStyles(b *strings.Builder, topLang models.LangStat) {
 </defs>`+"\n\n",
 	)
 
-	topColor := safeColor(topLang.Color, "#ffffff")
+	topColor := color.Safe(topLang.Color, "#ffffff")
 
 	//style
 	fmt.Fprint(b, `  <style>`+"\n")
