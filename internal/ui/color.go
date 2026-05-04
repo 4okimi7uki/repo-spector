@@ -11,6 +11,7 @@ var (
 	Lime       = color.RGB(37, 198, 168).SprintfFunc()
 	LimeYellow = color.RGB(202, 234, 119).SprintfFunc()
 	MossGray   = color.RGB(96, 94, 82).SprintfFunc()
+	Turquoise  = color.RGB(0, 210, 229).SprintFunc()
 )
 var (
 	Bold = color.New(color.Bold).SprintFunc()
