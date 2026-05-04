@@ -1,3 +1,25 @@
+## v0.3.0
+
+### Added
+
+- Added `--theme` option to switch between `original` (default) and `classic` themes for SVG output.
+- Added animation to SVG output.
+- Added version checking: notifies when a newer release is available via GitHub API.
+
+### Changed
+
+- Reorganized rendering logic into `internal/render/original/` and `internal/render/classic/` packages.
+- Moved spinner from `cmd/` to `internal/ui` package.
+- Added color helper functions to `internal/ui` package.
+- Migrated from pre-commit to lefthook for lint hooks.
+
+### Dependencies
+
+- Bumped `golangci/golangci-lint-action` from 7 to 9.
+- Bumped `softprops/action-gh-release` from 2 to 3.
+- Bumped `actions/checkout` from 4 to 6.
+- Bumped `actions/setup-go` from 5 to 6.
+
 ## v0.2.0
 
 ### Added
