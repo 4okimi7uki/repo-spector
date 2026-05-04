@@ -8,6 +8,7 @@ import (
 
 	"github.com/4okimi7uki/repo-spector/internal/client"
 	"github.com/4okimi7uki/repo-spector/internal/gh"
+	"github.com/4okimi7uki/repo-spector/internal/models"
 	"github.com/4okimi7uki/repo-spector/internal/render"
 	"github.com/4okimi7uki/repo-spector/internal/ui"
 	"github.com/joho/godotenv"
@@ -30,7 +31,7 @@ var rootCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if showVersion {
 			resolvedVersion := gh.ResolvedVersion()
-			fmt.Printf("%s %s\n", resolvedVersion, ui.Mastered("(repo-spector)"))
+			fmt.Printf("%s %s\n", resolvedVersion, ui.Turquoise("(repo-spector)"))
 
 			// check latest version
 			PrintCheckLatestVersion()
@@ -40,21 +41,20 @@ var rootCmd = &cobra.Command{
 
 		_ = godotenv.Load()
 		v := strings.TrimSpace(os.Getenv("GH_TOKEN"))
+		resolvedExcludeLang := strings.Split(excludeLang, ",")
+		var agg models.LangStatWithTotal
 
-		err := ui.WithSpinner("Generating SVG...", func(update func(string)) error {
-			resolvedExcludeLang := strings.Split(excludeLang, ",")
-
+		err := ui.WithSpinner("Fetching...", func(update func(string)) error {
+			var repo models.RepositoryCountAndAuthor
+			var err error
 			c := client.NewClient(v)
 
-			agg, repo, err := c.FetchAllRepo(resolvedExcludeLang)
+			agg, repo, err = c.FetchAllRepo(resolvedExcludeLang)
 			if err != nil {
 				return err
 			}
 
-			if err = ui.PrintSummary(agg, resolvedExcludeLang); err != nil {
-				return err
-			}
-
+			update("Build SVG...")
 			content, err := render.BuildSVG(agg, repo)
 			if err != nil {
 				return err
@@ -67,6 +67,11 @@ var rootCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
+
+		if err = ui.PrintSummary(agg, resolvedExcludeLang); err != nil {
+			return err
+		}
+
 		elapsed := time.Since(start)
 		fmt.Printf("Done in %.1fs 📈✨\n\n", elapsed.Seconds())
 
