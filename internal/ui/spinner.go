@@ -17,7 +17,6 @@ func padSuffix(s string, width int) string {
 
 func WithSpinner(initialMsg string, fn func(update func(string)) error) error {
 	const spinnerSuffixWidth = 30
-	const interval = 140 * time.Millisecond
 	s := spinner.New(spinner.CharSets[29], 100*time.Millisecond)
 	s.Writer = os.Stderr
 	s.Suffix = padSuffix(" "+initialMsg, spinnerSuffixWidth)
