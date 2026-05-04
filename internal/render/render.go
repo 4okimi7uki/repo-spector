@@ -28,24 +28,28 @@ func writeSVG(path string, content string) error {
 
 func RenderSVG(style string, agg models.LangStatWithTotal, repo models.RepositoryCountAndAuthor, dirPath string) error {
 	var (
-		svgData string
-		err     error
+		svgData  string
+		err      error
+		fileName string
 	)
 	style = strings.TrimSpace(style)
 
 	switch style {
 	case "classic":
+		fileName = "classic_theme.svg"
 		svgData, err = classic.BuildSVG(agg, repo)
 		if err != nil {
 			return fmt.Errorf("svg: failed to build svg: %w", err)
 		}
 	default:
+		fileName = "top6_lang.svg"
 		svgData, err = original.BuildSVG(agg, repo)
 		if err != nil {
 			return fmt.Errorf("svg: failed to build svg: %w", err)
 		}
 	}
-	if err = writeSVG(dirPath, svgData); err != nil {
+	filePath := dirPath + "/" + fileName
+	if err = writeSVG(filePath, svgData); err != nil {
 		return fmt.Errorf("svg: failed to write svg: %w", err)
 	}
 

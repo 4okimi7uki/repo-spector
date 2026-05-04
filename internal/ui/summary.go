@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/4okimi7uki/repo-spector/internal/models"
+	"github.com/dustin/go-humanize"
 )
 
 func PrintSummary(aggregate models.LangStatWithTotal, excludeLang []string) error {
@@ -22,7 +23,7 @@ func PrintSummary(aggregate models.LangStatWithTotal, excludeLang []string) erro
 	_, _ = fmt.Fprintln(os.Stdout, bar)
 
 	_, _ = fmt.Fprintf(os.Stdout, " %-18s : %s\n", "Date", now)
-	_, _ = fmt.Fprintf(os.Stdout, " %-18s : %d byte\n", "Total", Total)
+	_, _ = fmt.Fprintf(os.Stdout, " %-18s : %s byte\n", "Total", humanize.Comma(int64(Total)))
 	_, _ = fmt.Fprintf(os.Stdout, " %-18s : %s\n", "Exclude Languages", excludeLang)
 
 	_, _ = fmt.Fprintln(os.Stdout, bar)
@@ -31,10 +32,10 @@ func PrintSummary(aggregate models.LangStatWithTotal, excludeLang []string) erro
 	for idx, item := range langItems {
 		_, _ = fmt.Fprintf(
 			os.Stdout,
-			" #%2d  %-15s %10d byte  %6.2f%%\n",
+			" #%2d  %-15s %10s byte  %6.2f%%\n",
 			idx+1,
 			item.Name,
-			item.Size,
+			humanize.Comma(int64(item.Size)),
 			item.Percent,
 		)
 	}
