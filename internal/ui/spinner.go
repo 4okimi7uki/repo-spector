@@ -1,7 +1,6 @@
-package cmd
+package ui
 
 import (
-	"fmt"
 	"os"
 	"strings"
 	"time"
@@ -16,22 +15,23 @@ func padSuffix(s string, width int) string {
 	return s + strings.Repeat(" ", width-len(s))
 }
 
-func WithSpinner(initial string, fn func(update func(string)) error) error {
+func WithSpinner(initialMsg string, fn func(update func(string)) error) error {
 	const spinnerSuffixWidth = 30
-	const interval = 100 * time.Millisecond
+	const interval = 140 * time.Millisecond
 	s := spinner.New(spinner.CharSets[29], 100*time.Millisecond)
 	s.Writer = os.Stderr
-	s.Suffix = padSuffix(initial, spinnerSuffixWidth)
+	s.Suffix = padSuffix(" "+initialMsg, spinnerSuffixWidth)
 
 	s.Start()
 	defer func() {
-		fmt.Fprint(os.Stderr, "\r\033[K") // 行をリセット
+		time.Sleep(600 * time.Millisecond)
 		s.Stop()
 	}()
 
 	update := func(msg string) {
+		s.Lock()
 		s.Suffix = padSuffix(" "+msg, spinnerSuffixWidth)
-		time.Sleep(interval + 10*time.Millisecond)
+		s.Unlock()
 	}
 
 	return fn(update)

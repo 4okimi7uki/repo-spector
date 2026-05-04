@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/4okimi7uki/repo-spector/internal/client"
+	"github.com/4okimi7uki/repo-spector/internal/gh"
 	"github.com/4okimi7uki/repo-spector/internal/render"
 	"github.com/4okimi7uki/repo-spector/internal/ui"
 	"github.com/joho/godotenv"
@@ -29,7 +30,11 @@ var rootCmd = &cobra.Command{
 	Short: "Generate language stats SVG for your repositories",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if showVersion {
-			fmt.Printf("repo-spector %s\n", version)
+			resolvedVersion := gh.ResolvedVersion()
+			fmt.Printf("%s %s\n", resolvedVersion, ui.Mastered("(repo-spector)"))
+
+			// check latest version
+			PrintCheckLatestVersion()
 			return nil
 		}
 		start := time.Now()
@@ -37,7 +42,7 @@ var rootCmd = &cobra.Command{
 		_ = godotenv.Load()
 		v := strings.TrimSpace(os.Getenv("GH_TOKEN"))
 
-		err := WithSpinner("　Generating SVG...", func(update func(string)) error {
+		err := ui.WithSpinner("Generating SVG...", func(update func(string)) error {
 			resolvedExcludeLang := strings.Split(excludeLang, ",")
 
 			c := client.NewClient(v)
@@ -79,4 +84,12 @@ func Excute() {
 func init() {
 	rootCmd.Flags().BoolVarP(&showVersion, "version", "v", false, "Print version information")
 	rootCmd.PersistentFlags().StringVarP(&excludeLang, "exclude-lang", "x", "", "Exclude languages (e.g. -x 'html,shell')")
+}
+
+func PrintCheckLatestVersion() {
+	resolvedVersion := gh.ResolvedVersion()
+	if msg, err := gh.CheckLatestVersion("4okimi7uki", "repo-spector", resolvedVersion); err == nil && msg != "" {
+		_, _ = fmt.Fprintf(os.Stdout, "%s\n", ui.LimeYellow(msg))
+		_, _ = fmt.Fprintf(os.Stdout, "%s\n\n", "https://github.com/4okimi7uki/repo-spector/releases")
+	}
 }

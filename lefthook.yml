@@ -1,0 +1,5 @@
+pre-commit:
+  jobs:
+    - name: lint
+      glob: "**/*.go"
+      run: golangci-lint run ./...
