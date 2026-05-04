@@ -17,12 +17,14 @@ import (
 
 var (
 	showVersion bool
+	style       string
 	excludeLang string
 )
 
 const (
-	dirPath  = "./output"
-	fileName = "top6_lang.svg"
+	dirPath = "./output"
+	// fileName = "top6_lang.svg"
+	fileName = "classic_theme.svg"
 )
 
 var rootCmd = &cobra.Command{
@@ -55,13 +57,10 @@ var rootCmd = &cobra.Command{
 			}
 
 			update("Build SVG...")
-			content, err := render.BuildSVG(agg, repo)
-			if err != nil {
+			if err = render.RenderSVG(style, agg, repo, dirPath+"/"+fileName); err != nil {
 				return err
 			}
-			if err = render.WriteSVG(dirPath+"/"+fileName, content); err != nil {
-				return err
-			}
+
 			return nil
 		})
 		if err != nil {
@@ -88,6 +87,7 @@ func Excute() {
 func init() {
 	rootCmd.Flags().BoolVarP(&showVersion, "version", "v", false, "Print version information")
 	rootCmd.PersistentFlags().StringVarP(&excludeLang, "exclude-lang", "x", "", "Exclude languages (e.g. -x 'html,shell')")
+	rootCmd.Flags().StringVar(&style, "style", "", "style")
 }
 
 func PrintCheckLatestVersion() {
