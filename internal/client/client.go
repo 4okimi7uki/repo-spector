@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/4okimi7uki/repo-spector/internal/aggregate"
+	"github.com/4okimi7uki/repo-spector/internal/gh"
 	"github.com/4okimi7uki/repo-spector/internal/models"
 )
 
@@ -15,6 +16,9 @@ type Client struct {
 	endpoint   string
 	token      string
 }
+
+var resolvedVersion = gh.ResolvedVersion()
+var userAgent = fmt.Sprintf("repo-spector/%s (github.com/4okimi7uki/repo-spector)", resolvedVersion)
 
 const githubGraphQLEndpoint = "https://api.github.com/graphql"
 
@@ -44,6 +48,7 @@ func (c *Client) Do(query string, vars map[string]any, v any) error {
 
 	req.Header.Set("Authorization", "bearer "+c.token)
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("User-Agent", userAgent)
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
