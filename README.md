@@ -10,7 +10,8 @@
 
 </div>
 
-**repo-spector** (a.k.a. [**self-reposcope**](https://github.com/4okimi7uki/self-reposcope)) is a reimagined Go-based implementation of the original Rust-based self-reposcope, featuring a renewed design and a migration from the GitHub REST API to GitHub GraphQL.
+🎢 **repo-spector** is a Go-based reimplementation of [**self-reposcope**](https://github.com
+/4okimi7uki/self-reposcope). The key difference is the migration from GitHub REST API to GitHub GraphQL — language colors are fetched dynamically, so no manual maintenance is needed.
 
 ## Features
 
@@ -74,7 +75,7 @@ jobs:
 
     steps:
       - name: Checkout target repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Download repo-spector binary from GitHub Release
         shell: bash
