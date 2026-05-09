@@ -1,7 +1,9 @@
 # repo-spector
 
 <div align="center">
-    <img src="./output/top6_lang.svg" alt="aggerecate_img" />
+  | <img src="./output/top6_lang.svg" alt="original_theme" height="280"/> | <img src="./output/classic_theme.svg" alt="classic_theme" /> |
+  | :---: | :---: |
+  | original theme | classic theme |
 
 ![Go Version](https://img.shields.io/badge/Go-1.25-blue?logo=go) ![CI](https://github.com/4okimi7uki/repo-spector/actions/workflows/lint.yml/badge.svg)
 
@@ -23,7 +25,19 @@
 
 ## Usage
 
-### GitHub Actions
+```sh
+./repo-spector
+```
+
+```sh
+# Exclude specific languages
+./repo-spector -x 'html,css,dockerfile'
+
+# Change SVG style
+./repo-spector --style classic
+```
+
+## GitHub Actions
 
 To enable automatic updates, follow these two steps:
 
@@ -35,6 +49,11 @@ then add a new secret with:
 - **Name**: `GH_TOKEN`
 - **Value**: Your GitHub Personal Access Token  
   (with `repo` and `workflow` scopes)
+
+Optionally, to exclude specific languages via Actions, add another secret:
+
+- **Name**: `EXCLUDED_LANGUAGES`
+- **Value**: e.g. `html,css,dockerfile`
 
 2. Add the following workflow file to `.github/workflows/repo-spector.yml`.
 
@@ -87,28 +106,13 @@ jobs:
 
 ```
 
-### CLI
+## Flags
 
-TBD
-
-## Options
-
-### Exclude language
-
-You can exclude specific languages either by using the `-x, --excluded-languages` CLI option or the secret: `EXCLUDED_LANGUAGES`.
-
-For example, to exclude `HTML`, `CSS` and `dockerfile`:
-
-**`secret`**
-
-- **Name**: `EXCLUDED_LANGUAGES`
-- **Value**: `html,css,dockerfile`
-
-**`CLI`**
-
-```sh
-./repo-scope -x 'html,css,dockerfile'
-```
+| Flag             | Short | Default      | Description                                    |
+| ---------------- | ----- | ------------ | ---------------------------------------------- |
+| `--version`      | `-v`  | `false`      | Print version information                      |
+| `--exclude-lang` | `-x`  | `""`         | Exclude languages (e.g. `-x 'html,shell'`)     |
+| `--style`        | —     | `"original"` | SVG output style (`"original"` or `"classic"`) |
 
 <!--関連する語根 -spect を含む単語
 また、「spector」という形ではありませんが、同じ語源を持つ一般的な単語には以下のようなものがあります。
