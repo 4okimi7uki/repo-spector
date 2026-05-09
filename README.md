@@ -34,8 +34,8 @@
 # Exclude specific languages
 ./repo-spector -x 'html,css,dockerfile'
 
-# Change SVG style
-./repo-spector --style classic
+# Change SVG theme
+./repo-spector --theme classic
 ```
 
 ## GitHub Actions
@@ -113,7 +113,7 @@ jobs:
 | ---------------- | ----- | ------------ | ---------------------------------------------- |
 | `--version`      | `-v`  | `false`      | Print version information                      |
 | `--exclude-lang` | `-x`  | `""`         | Exclude languages (e.g. `-x 'html,shell'`)     |
-| `--style`        | —     | `"original"` | SVG output style (`"original"` or `"classic"`) |
+| `--theme`        | —     | `"original"` | SVG output theme (`"original"` or `"classic"`) |
 
 <!--関連する語根 -spect を含む単語
 また、「spector」という形ではありませんが、同じ語源を持つ一般的な単語には以下のようなものがあります。
