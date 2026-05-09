@@ -17,7 +17,7 @@ import (
 
 var (
 	showVersion bool
-	style       string
+	theme       string
 	excludeLang string
 )
 
@@ -55,7 +55,7 @@ var rootCmd = &cobra.Command{
 			}
 
 			update("Build SVG...")
-			if err = render.RenderSVG(style, agg, repo, dirPath); err != nil {
+			if err = render.RenderSVG(theme, agg, repo, dirPath); err != nil {
 				return err
 			}
 
@@ -85,7 +85,7 @@ func Excute() {
 func init() {
 	rootCmd.Flags().BoolVarP(&showVersion, "version", "v", false, "Print version information")
 	rootCmd.PersistentFlags().StringVarP(&excludeLang, "exclude-lang", "x", "", "Exclude languages (e.g. -x 'html,shell')")
-	rootCmd.Flags().StringVar(&style, "style", "original", `SVG output style (options: "original", "classic")`)
+	rootCmd.Flags().StringVar(&theme, "theme", "original", `SVG output theme (options: "original", "classic")`)
 }
 
 func PrintCheckLatestVersion() {
