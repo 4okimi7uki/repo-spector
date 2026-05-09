@@ -1,9 +1,10 @@
 # repo-spector
 
 <div align="center">
-  | <img src="./output/top6_lang.svg" alt="original_theme" height="280"/> | <img src="./output/classic_theme.svg" alt="classic_theme" /> |
-  | :---: | :---: |
-  | original theme | classic theme |
+
+| <img src="./output/top6_lang.svg" alt="original_theme" height="280"/> | <img src="./output/classic_theme.svg" alt="classic_theme" /> |
+| :-------------------------------------------------------------------: | :----------------------------------------------------------: |
+|                            original theme                             |                        classic theme                         |
 
 ![Go Version](https://img.shields.io/badge/Go-1.25-blue?logo=go) ![CI](https://github.com/4okimi7uki/repo-spector/actions/workflows/lint.yml/badge.svg)
 
