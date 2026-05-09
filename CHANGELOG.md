@@ -1,8 +1,14 @@
+## v0.4.0
+
+### Changed
+
+- **BREAKING**: Renamed `--style` flag to `--theme`. Update your CLI usage and workflow files accordingly.
+
 ## v0.3.0
 
 ### Added
 
-- Added `--theme` option to switch between `original` (default) and `classic` themes for SVG output.
+- Added `--style` option to switch between `original` (default) and `classic` themes for SVG output.
 - Added animation to SVG output.
 - Added version checking: notifies when a newer release is available via GitHub API.
 
