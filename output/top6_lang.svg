@@ -32,34 +32,34 @@
  <rect x="0.5" y="0.5" width="429" height="303" rx="4.5" ry="4.5" stroke="#3D444D"/>
   <text id="title" x="33" y="40" font-size="14" font-weight="bold" fill="#fff" font-family="system-ui, -apple-system, sans-serif">Most Used Languages</text>
   <text id="topLang" class="top" x="135" y="80" font-size="38" dominant-baseline="middle" text-anchor="middle" font-weight="bold" fill='#fff' font-family="system-ui, -apple-system, sans-serif">Go</text>
-  <text id="topPercent" class="top" x="330" y="70" font-size="28" font-weight="bold" fill='#fff' font-family="system-ui, -apple-system, sans-serif" dominant-baseline="middle" text-anchor="middle" >71.16%</text>
+  <text id="topPercent" class="top" x="330" y="70" font-size="28" font-weight="bold" fill='#fff' font-family="system-ui, -apple-system, sans-serif" dominant-baseline="middle" text-anchor="middle" >69.05%</text>
   <text id="topByte" class="top" x="330" y="95" font-size="16" font-weight="normal" fill='#fff' font-family="system-ui, -apple-system, sans-serif" dominant-baseline="middle" text-anchor="middle" >253938 bytes</text>
 
   <rect x="14" y="115.8" width="400" height="1" fill="url(#animeGrad)" />
 
 <g transform="translate(0, 0)" class="langRow">
-  <text x="33" y="150" font-size="16" font-weight="bold" fill="#fff" font-family="system-ui, -apple-system, sans-serif">CSS  <tspan font-size="13" fill="#B6B6B6" font-weight="normal">7.38%</tspan></text>
+  <text x="33" y="150" font-size="16" font-weight="bold" fill="#fff" font-family="system-ui, -apple-system, sans-serif">HTML  <tspan font-size="13" fill="#B6B6B6" font-weight="normal">7.80%</tspan></text>
   <rect class="bar" style="--w: 200.000000px" x="195" y="140" width="200.000000" height="12" fill="url(#gradient)" />
 </g>
 
 <g transform="translate(0, 30)" class="langRow">
-  <text x="33" y="150" font-size="16" font-weight="bold" fill="#fff" font-family="system-ui, -apple-system, sans-serif">HTML  <tspan font-size="13" fill="#B6B6B6" font-weight="normal">4.98%</tspan></text>
-  <rect class="bar" style="--w: 135.000000px" x="195" y="140" width="135.000000" height="12" fill="url(#gradient)" />
+  <text x="33" y="150" font-size="16" font-weight="bold" fill="#fff" font-family="system-ui, -apple-system, sans-serif">CSS  <tspan font-size="13" fill="#B6B6B6" font-weight="normal">7.16%</tspan></text>
+  <rect class="bar" style="--w: 184.000000px" x="195" y="140" width="184.000000" height="12" fill="url(#gradient)" />
 </g>
 
 <g transform="translate(0, 60)" class="langRow">
-  <text x="33" y="150" font-size="16" font-weight="bold" fill="#fff" font-family="system-ui, -apple-system, sans-serif">Rust  <tspan font-size="13" fill="#B6B6B6" font-weight="normal">4.06%</tspan></text>
-  <rect class="bar" style="--w: 110.000000px" x="195" y="140" width="110.000000" height="12" fill="url(#gradient)" />
+  <text x="33" y="150" font-size="16" font-weight="bold" fill="#fff" font-family="system-ui, -apple-system, sans-serif">Rust  <tspan font-size="13" fill="#B6B6B6" font-weight="normal">3.93%</tspan></text>
+  <rect class="bar" style="--w: 101.000000px" x="195" y="140" width="101.000000" height="12" fill="url(#gradient)" />
 </g>
 
 <g transform="translate(0, 90)" class="langRow">
-  <text x="33" y="150" font-size="16" font-weight="bold" fill="#fff" font-family="system-ui, -apple-system, sans-serif">MDX  <tspan font-size="13" fill="#B6B6B6" font-weight="normal">3.66%</tspan></text>
-  <rect class="bar" style="--w: 99.000000px" x="195" y="140" width="99.000000" height="12" fill="url(#gradient)" />
+  <text x="33" y="150" font-size="16" font-weight="bold" fill="#fff" font-family="system-ui, -apple-system, sans-serif">MDX  <tspan font-size="13" fill="#B6B6B6" font-weight="normal">3.55%</tspan></text>
+  <rect class="bar" style="--w: 91.000000px" x="195" y="140" width="91.000000" height="12" fill="url(#gradient)" />
 </g>
 
 <g transform="translate(0, 120)" class="langRow">
-  <text x="33" y="150" font-size="16" font-weight="bold" fill="#fff" font-family="system-ui, -apple-system, sans-serif">Kotlin  <tspan font-size="13" fill="#B6B6B6" font-weight="normal">1.81%</tspan></text>
-  <rect class="bar" style="--w: 49.000000px" x="195" y="140" width="49.000000" height="12" fill="url(#gradient)" />
+  <text x="33" y="150" font-size="16" font-weight="bold" fill="#fff" font-family="system-ui, -apple-system, sans-serif">Kotlin  <tspan font-size="13" fill="#B6B6B6" font-weight="normal">1.75%</tspan></text>
+  <rect class="bar" style="--w: 45.000000px" x="195" y="140" width="45.000000" height="12" fill="url(#gradient)" />
 </g>
 
 </svg>
